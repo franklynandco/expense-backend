@@ -1,0 +1,22 @@
+const expenseModel = require('../models/expenseModel');
+
+exports.createExpense = (req, res) => {
+  const { amount, category, description, date } = req.body;
+  const userId = req.userId; // Extracted from JWT token
+  expenseModel.createExpense({ userId, amount, category, description, date }, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error creating expense' });
+    }
+    res.status(201).json({ message: 'Expense created successfully' });
+  });
+};
+
+exports.getUserExpenses = (req, res) => {
+  const userId = req.userId; // Extracted from JWT token
+  expenseModel.getExpensesByUserId(userId, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error fetching expenses' });
+    }
+    res.status(200).json(results);
+  });
+};
